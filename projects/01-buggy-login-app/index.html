@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FoxReply · Launch Roadmap</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0d;
+    --surface: #161616;
+    --surface2: #1e1e1e;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #f0ede8;
+    --muted: #888;
+    --faint: #555;
+    --accent: #ff6b35;
+    --accent-dim: rgba(255,107,53,0.12);
+    --green: #3ecf8e;
+    --green-dim: rgba(62,207,142,0.1);
+    --blue: #5b9cf6;
+    --blue-dim: rgba(91,156,246,0.1);
+    --amber: #f5a623;
+    --amber-dim: rgba(245,166,35,0.1);
+    --purple: #a78bfa;
+    --purple-dim: rgba(167,139,250,0.1);
+    --pink: #f472b6;
+    --pink-dim: rgba(244,114,182,0.1);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  .grain {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.4;
+  }
+  .container { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; position: relative; z-index: 1; }
+
+  /* Header */
+  .header { margin-bottom: 48px; }
+  .logo { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; }
+  .logo-mark {
+    width: 36px; height: 36px; background: var(--accent); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Mono', monospace; font-size: 16px; font-weight: 500; color: #fff;
+  }
+  .logo-name { font-size: 17px; font-weight: 500; letter-spacing: -0.3px; }
+  .logo-sub { font-size: 12px; color: var(--muted); margin-left: 2px; font-family: 'DM Mono', monospace; }
+  .header-title { font-size: 32px; font-weight: 600; letter-spacing: -0.8px; color: var(--text); margin-bottom: 6px; }
+  .header-sub { font-size: 14px; color: var(--muted); font-family: 'DM Mono', monospace; }
+
+  /* Status pills */
+  .status-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 36px; }
+  .pill {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; font-family: 'DM Mono', monospace;
+    padding: 5px 12px; border-radius: 100px;
+    border: 1px solid var(--border2);
+    background: var(--surface);
+  }
+  .pill-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .pill.green { border-color: rgba(62,207,142,0.25); color: var(--green); }
+  .pill.green .pill-dot { background: var(--green); box-shadow: 0 0 6px var(--green); }
+  .pill.amber { border-color: rgba(245,166,35,0.25); color: var(--amber); }
+  .pill.amber .pill-dot { background: var(--amber); }
+  .pill.blue { border-color: rgba(91,156,246,0.25); color: var(--blue); }
+  .pill.blue .pill-dot { background: var(--blue); }
+
+  /* Metrics */
+  .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 36px; }
+  .metric {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px;
+  }
+  .metric-val { font-size: 28px; font-weight: 600; color: var(--text); letter-spacing: -1px; font-family: 'DM Mono', monospace; }
+  .metric-label { font-size: 11px; color: var(--muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* Progress */
+  .progress-block { margin-bottom: 48px; }
+  .progress-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; margin-bottom: 8px; }
+  .progress-track { height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.5s cubic-bezier(.4,0,.2,1); }
+
+  /* Timeline */
+  .timeline { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 48px; }
+  .tl-week { background: var(--surface); padding: 14px 16px; }
+  .tl-week.active { background: var(--surface2); }
+  .tl-num { font-size: 11px; color: var(--accent); font-family: 'DM Mono', monospace; font-weight: 500; margin-bottom: 4px; }
+  .tl-dates { font-size: 11px; color: var(--faint); font-family: 'DM Mono', monospace; margin-bottom: 6px; }
+  .tl-focus { font-size: 13px; color: var(--muted); }
+
+  /* Phases */
+  .phase { margin-bottom: 32px; }
+  .phase-head {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 16px; cursor: pointer;
+    border: 1px solid var(--border); border-radius: 12px;
+    background: var(--surface);
+    user-select: none; transition: border-color 0.15s;
+    margin-bottom: 0;
+  }
+  .phase-head:hover { border-color: var(--border2); }
+  .phase-head.open { border-radius: 12px 12px 0 0; border-bottom-color: transparent; }
+  .phase-label { font-size: 13px; font-weight: 500; color: var(--text); flex: 1; }
+  .phase-badge {
+    font-size: 10px; font-family: 'DM Mono', monospace; font-weight: 500;
+    padding: 3px 10px; border-radius: 100px; flex-shrink: 0;
+  }
+  .badge-done { background: var(--green-dim); color: var(--green); border: 1px solid rgba(62,207,142,0.2); }
+  .badge-now { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(255,107,53,0.2); }
+  .badge-next { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(91,156,246,0.2); }
+  .badge-last { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(245,166,35,0.2); }
+  .phase-arrow { font-size: 12px; color: var(--faint); transition: transform 0.2s; flex-shrink: 0; }
+  .phase-arrow.open { transform: rotate(90deg); }
+  .phase-week-label { font-size: 11px; color: var(--faint); font-family: 'DM Mono', monospace; flex-shrink: 0; }
+  .phase-progress-mini {
+    font-size: 11px; font-family: 'DM Mono', monospace; color: var(--faint); flex-shrink: 0;
+  }
+
+  .tasks {
+    border: 1px solid var(--border); border-top: none;
+    border-radius: 0 0 12px 12px; overflow: hidden;
+    display: none;
+  }
+  .tasks.open { display: block; }
+
+  .task {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 14px 16px; cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface); transition: background 0.1s;
+  }
+  .task:last-child { border-bottom: none; }
+  .task:hover { background: var(--surface2); }
+  .task.done { opacity: 0.45; }
+
+  .task-check {
+    width: 20px; height: 20px; border-radius: 50%;
+    border: 1.5px solid var(--faint); flex-shrink: 0; margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .task-check.checked { background: var(--green); border-color: var(--green); }
+  .task-check svg { display: none; }
+  .task-check.checked svg { display: block; }
+
+  .task-content { flex: 1; min-width: 0; }
+  .task-name { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+  .task.done .task-name { text-decoration: line-through; }
+  .task-note { font-size: 12px; color: var(--muted); line-height: 1.5; margin-bottom: 8px; }
+  .task-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+  .tag {
+    font-size: 10px; font-family: 'DM Mono', monospace; font-weight: 500;
+    padding: 2px 8px; border-radius: 100px;
+  }
+  .tag-tech { background: var(--blue-dim); color: var(--blue); }
+  .tag-ops { background: var(--amber-dim); color: var(--amber); }
+  .tag-biz { background: var(--purple-dim); color: var(--purple); }
+  .tag-mkt { background: var(--pink-dim); color: var(--pink); }
+  .tag-legal { background: var(--green-dim); color: var(--green); }
+
+  /* Reset */
+  .footer { margin-top: 48px; display: flex; justify-content: space-between; align-items: center; }
+  .reset-btn {
+    font-size: 12px; font-family: 'DM Mono', monospace; color: var(--faint);
+    background: none; border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 16px; cursor: pointer; transition: all 0.15s;
+  }
+  .reset-btn:hover { color: var(--muted); border-color: var(--border2); }
+  .footer-note { font-size: 12px; color: var(--faint); font-family: 'DM Mono', monospace; }
+
+  @media (max-width: 600px) {
+    .metrics { grid-template-columns: repeat(2, 1fr); }
+    .timeline { grid-template-columns: 1fr; }
+    .header-title { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="container">
+
+  <div class="header">
+    <div class="logo">
+      <div class="logo-mark">F</div>
+      <div>
+        <div class="logo-name">FoxReply</div>
+        <div class="logo-sub">foxreply.io</div>
+      </div>
+    </div>
+    <div class="header-title">Launch Roadmap</div>
+    <div class="header-sub">Started Apr 6, 2026 · Target: Apr 20–27</div>
+  </div>
+
+  <div class="status-row">
+    <div class="pill green"><div class="pill-dot"></div>n8n live</div>
+    <div class="pill green"><div class="pill-dot"></div>foxreply.io deployed</div>
+    <div class="pill green"><div class="pill-dot"></div>Twilio compliance sent</div>
+    <div class="pill amber"><div class="pill-dot"></div>Twilio approval pending</div>
+    <div class="pill blue"><div class="pill-dot"></div>Google Sheets CRM in progress</div>
+  </div>
+
+  <div class="metrics">
+    <div class="metric"><div class="metric-val" id="m-done">0</div><div class="metric-label">Completed</div></div>
+    <div class="metric"><div class="metric-val" id="m-left">0</div><div class="metric-label">Remaining</div></div>
+    <div class="metric"><div class="metric-val" id="m-pct">0%</div><div class="metric-label">Progress</div></div>
+    <div class="metric"><div class="metric-val" id="m-days">21</div><div class="metric-label">Days to launch</div></div>
+  </div>
+
+  <div class="progress-block">
+    <div class="progress-meta">
+      <span>Overall completion</span>
+      <span id="prog-label">0 / 0 tasks</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-week active">
+      <div class="tl-num">WEEK 1</div>
+      <div class="tl-dates">Apr 6 – 13</div>
+      <div class="tl-focus">Core workflows & integrations</div>
+    </div>
+    <div class="tl-week">
+      <div class="tl-num">WEEK 2</div>
+      <div class="tl-dates">Apr 14 – 20</div>
+      <div class="tl-focus">Operations, payments & demo</div>
+    </div>
+    <div class="tl-week">
+      <div class="tl-num">WEEK 3</div>
+      <div class="tl-dates">Apr 21 – 27</div>
+      <div class="tl-focus">SMS activation & launch</div>
+    </div>
+  </div>
+
+  <div id="phases-container"></div>
+
+  <div class="footer">
+    <button class="reset-btn" onclick="resetAll()">Reset all</button>
+    <div class="footer-note">Saves automatically in browser</div>
+  </div>
+
+</div>
+
+<script>
+const PHASES = [
+  {
+    id: 'p0', label: 'Already done', badge: 'badge-done', week: 'Infrastructure complete', defaultOpen: false,
+    tasks: [
+      { id: 't01', name: 'VPS live — Docker + Traefik + SSL', note: 'n8n running at app.responsflow.cloud', tags: ['tech'], done: true },
+      { id: 't02', name: 'foxreply.io landing page deployed', note: 'Live on the VPS, domain pointed correctly via GoDaddy', tags: ['tech'], done: true },
+      { id: 't03', name: 'Privacy policy, ToS, contact & SMS opt-in pages', note: 'Added via Claude Code — required for Twilio compliance', tags: ['legal'], done: true },
+      { id: 't04', name: 'Twilio compliance response sent', note: 'Ticket #25635171 · Waiting on approval from Twilio team', tags: ['legal'], done: true },
+      { id: 't05', name: 'Brand finalized — FoxReply', note: 'foxreply.io registered via GoDaddy with full domain protection', tags: ['biz'], done: true },
+      { id: 't06', name: 'Google Sheets CRM template designed (v5)', note: '10 columns, monthly tabs, dashboard — ready to wire into n8n', tags: ['tech'], done: true },
+    ]
+  },
+  {
+    id: 'p1', label: 'Week 1 — Core workflows & integrations', badge: 'badge-now', week: 'Apr 6–13', defaultOpen: true,
+    tasks: [
+      { id: 't10', name: 'Connect info@wessmc.com Google Workspace to n8n', note: 'Google Sheets + Gmail + Drive credentials. Build and test with wmc17.ai first, then swap to production.', tags: ['tech'] },
+      { id: 't11', name: 'Build web form AI responder workflow', note: 'Webhook → Claude API qualifier → Gmail reply. First production workflow and live demo tool.', tags: ['tech'] },
+      { id: 't12', name: 'Build lead intake + owner alert workflow', note: 'New lead triggers a formatted email or Slack alert to you as operator', tags: ['tech'] },
+      { id: 't13', name: 'Build AI qualification + lead scoring workflow', note: 'Hot/Warm/Cold routing logic — internal n8n only, never surfaces in client sheet', tags: ['tech'] },
+      { id: 't14', name: 'Build auto-booking via email workflow', note: 'Qualified leads routed to Google Calendar booking link or confirmation email', tags: ['tech'] },
+      { id: 't15', name: 'Wire Google Sheets CRM to n8n workflows', note: 'New leads write to the correct monthly tab automatically. Test against wmc17.ai sheet first.', tags: ['tech'] },
+      { id: 't16', name: 'Final website touch-ups', note: 'Review copy, CTA buttons, pricing section, mobile responsiveness', tags: ['biz'] },
+    ]
+  },
+  {
+    id: 'p2', label: 'Week 2 — Operations, payments & demo', badge: 'badge-next', week: 'Apr 14–20', defaultOpen: false,
+    tasks: [
+      { id: 't20', name: 'Set up Stripe for recurring billing', note: 'Monthly plans at $197 / $397 / $697. Enable invoicing. Use WMC Stripe account — not personal.', tags: ['biz'] },
+      { id: 't21', name: 'Tax & business accounting setup', note: 'Separate business checking under WMC. Track Stripe income + Twilio/Hostinger expenses in Wave (free).', tags: ['biz'] },
+      { id: 't22', name: 'Draft client onboarding SOP', note: 'Internal doc: client signs up → Twilio number provisioned → CRM sheet created → n8n nodes updated → go-live confirmation', tags: ['ops'] },
+      { id: 't23', name: 'Document new client account setup checklist', note: 'Twilio number setup, Google Sheet created from v5 template, Sheet ID into n8n nodes, test run, confirmation sent', tags: ['ops'] },
+      { id: 't24', name: 'Create client service agreement', note: '1-page contract: scope, billing terms, cancellation policy, data handling. Use a DocuSign or HelloSign template.', tags: ['legal'] },
+      { id: 't25', name: 'Build day-to-day operations tracker', note: 'Simple Google Sheet or Notion doc: active clients, workflow health, Twilio number map, last test date', tags: ['ops'] },
+      { id: 't26', name: 'Define workflow failure protocol', note: 'What to do when n8n fails: monitoring alerts, restart steps, client communication template, SLA expectations', tags: ['ops'] },
+      { id: 't27', name: 'Build and record live service demo', note: 'Walk through full lead lifecycle: comes in → AI responds → scored → booked. Record a Loom. This is your sales tool.', tags: ['mkt'] },
+    ]
+  },
+  {
+    id: 'p3', label: 'Week 3 — SMS activation & launch', badge: 'badge-last', week: 'Apr 21–27', defaultOpen: false,
+    tasks: [
+      { id: 't30', name: 'Twilio approved — activate missed call + SMS workflows', note: 'Phase 2 of build sequence. Depends on Twilio timeline — pull earlier if approved sooner.', tags: ['tech'] },
+      { id: 't31', name: 'Build conversion confirmation workflow', note: 'Post-job follow-up to business owner: "Did this lead convert?" Yes/No → logs to CRM. Core differentiator.', tags: ['tech'] },
+      { id: 't32', name: 'Outreach strategy + asset kit', note: 'Target: HVAC, plumbing, contractors, law firms, med spas. Cold email template, DM script, one-liner value prop, Loom link.', tags: ['mkt'] },
+      { id: 't33', name: 'Cold outreach — first 20 prospects', note: 'Use local Facebook biz groups, Nextdoor, LinkedIn, cold email. Goal: 1 booked demo call from first batch.', tags: ['mkt'] },
+      { id: 't34', name: 'Sign first client', note: 'Even at a discount — stress-tests the full workflow before operating at scale. Gets a real CRM entry for demos.', tags: ['biz'] },
+      { id: 't35', name: 'End-to-end test with real data', note: 'Simulate full client lifecycle: lead in → AI responds → qualifies → books → conversion confirmed → CRM updated', tags: ['ops'] },
+      { id: 't36', name: '🚀 Launch', note: 'foxreply.io live, Stripe live, first client onboarded, workflows running. Ship it.', tags: ['biz'] },
+    ]
+  }
+];
+
+const TAG_LABELS = { tech: 'Technical', ops: 'Operations', biz: 'Business', mkt: 'Marketing', legal: 'Legal' };
+const STORAGE_KEY = 'foxreply_roadmap_v1';
+
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { return {}; }
+}
+
+function saveState() {
+  const s = {};
+  document.querySelectorAll('[data-task-id]').forEach(el => {
+    s[el.dataset.taskId] = el.classList.contains('checked');
+  });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+}
+
+function updateMetrics() {
+  const all = document.querySelectorAll('[data-task-id]');
+  const done = document.querySelectorAll('[data-task-id].checked');
+  const total = all.length, completed = done.length;
+  const pct = total ? Math.round(completed / total * 100) : 0;
+  document.getElementById('m-done').textContent = completed;
+  document.getElementById('m-left').textContent = total - completed;
+  document.getElementById('m-pct').textContent = pct + '%';
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-label').textContent = completed + ' / ' + total + ' tasks';
+
+  const launch = new Date('2026-04-27');
+  const now = new Date();
+  const days = Math.max(0, Math.ceil((launch - now) / 86400000));
+  document.getElementById('m-days').textContent = days;
+
+  PHASES.forEach(ph => {
+    const phaseTasks = document.querySelectorAll('#tasks-' + ph.id + ' [data-task-id]');
+    const phaseDone = document.querySelectorAll('#tasks-' + ph.id + ' [data-task-id].checked');
+    const mini = document.getElementById('mini-' + ph.id);
+    if (mini) mini.textContent = phaseDone.length + '/' + phaseTasks.length;
+  });
+}
+
+function toggleTask(id) {
+  const el = document.querySelector('[data-task-id="' + id + '"]');
+  if (!el) return;
+  el.classList.toggle('checked');
+  el.querySelector('svg').style.display = el.classList.contains('checked') ? 'block' : 'none';
+  el.closest('.task').classList.toggle('done', el.classList.contains('checked'));
+  saveState(); updateMetrics();
+}
+
+function togglePhase(id) {
+  const head = document.getElementById('head-' + id);
+  const tasks = document.getElementById('tasks-' + id);
+  const arrow = document.getElementById('arrow-' + id);
+  const isOpen = tasks.classList.contains('open');
+  tasks.classList.toggle('open', !isOpen);
+  head.classList.toggle('open', !isOpen);
+  arrow.classList.toggle('open', !isOpen);
+}
+
+function resetAll() {
+  if (!confirm('Reset all checkboxes? This cannot be undone.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  document.querySelectorAll('[data-task-id]').forEach(el => {
+    el.classList.remove('checked');
+    el.querySelector('svg').style.display = 'none';
+    el.closest('.task').classList.remove('done');
+  });
+  render_presets();
+  updateMetrics();
+}
+
+function render_presets() {
+  PHASES.forEach(ph => {
+    ph.tasks.filter(t => t.done).forEach(t => {
+      const el = document.querySelector('[data-task-id="' + t.id + '"]');
+      if (el) {
+        el.classList.add('checked');
+        el.querySelector('svg').style.display = 'block';
+        el.closest('.task').classList.add('done');
+      }
+    });
+  });
+}
+
+function render() {
+  const state = loadState();
+  const container = document.getElementById('phases-container');
+  container.innerHTML = '';
+
+  PHASES.forEach(ph => {
+    const div = document.createElement('div');
+    div.className = 'phase';
+
+    const tasksHTML = ph.tasks.map(t => {
+      const savedDone = state[t.id] !== undefined ? state[t.id] : (t.done || false);
+      const tagsHTML = t.tags.map(tg => `<span class="tag tag-${tg}">${TAG_LABELS[tg]}</span>`).join('');
+      return `
+        <div class="task${savedDone ? ' done' : ''}" onclick="toggleTask('${t.id}')">
+          <div class="task-check${savedDone ? ' checked' : ''}" data-task-id="${t.id}">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" style="display:${savedDone ? 'block' : 'none'}">
+              <path d="M1.5 5.5L4.5 8.5L9.5 2.5" stroke="#0d0d0d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="task-content">
+            <div class="task-name">${t.name}</div>
+            ${t.note ? `<div class="task-note">${t.note}</div>` : ''}
+            <div class="task-tags">${tagsHTML}</div>
+          </div>
+        </div>`;
+    }).join('');
+
+    div.innerHTML = `
+      <div class="phase-head${ph.defaultOpen ? ' open' : ''}" id="head-${ph.id}" onclick="togglePhase('${ph.id}')">
+        <span class="phase-badge ${ph.badge}">${ph.label.split('—')[0].trim()}</span>
+        <span class="phase-label">${ph.label}</span>
+        <span class="phase-progress-mini" id="mini-${ph.id}">0/0</span>
+        <span class="phase-week-label">${ph.week}</span>
+        <span class="phase-arrow${ph.defaultOpen ? ' open' : ''}" id="arrow-${ph.id}">▶</span>
+      </div>
+      <div class="tasks${ph.defaultOpen ? ' open' : ''}" id="tasks-${ph.id}">${tasksHTML}</div>`;
+
+    container.appendChild(div);
+  });
+
+  updateMetrics();
+}
+
+render();
+</script>
+</body>
+</html>
