@@ -22,5 +22,13 @@
 
 ## Test coverage
 
+Tested all interactive elements on the login form including form submission, 
+field validation, SSO buttons, password toggle, strength meter, and auxiliary 
+links. Did not test on mobile, Firefox, or Safari. Did not test with 
+browser autofill.
 
 ## What I would do next
+
+Cross-browser testing on Firefox and Safari. Test with autofilled credentials.
+Test on mobile viewport. Verify bugs are reproducible after hard refresh.
+Write formal test cases to cover edge cases missed in exploratory session.
